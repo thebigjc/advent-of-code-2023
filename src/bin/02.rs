@@ -29,38 +29,36 @@ pub fn part_two(input: &str) -> Option<u32> {
 }
 
 fn score_game(input: &str, eval: fn(u32, u32, u32, u32) -> u32) -> Option<u32> {
-    let mut score = 0;
+    input
+        .lines()
+        .map(|l| {
+            let colon = l.find(':').unwrap();
+            let num = l[5..colon].parse::<u32>().unwrap();
+            let game_line = &l[colon + 2..];
 
-    for l in input.lines() {
-        let colon = l.find(':')?;
-        let num = l[5..colon].parse::<u32>().unwrap();
-        let game_line = &l[colon + 2..];
+            let mut red = 0;
+            let mut green = 0;
+            let mut blue = 0;
 
-        let mut red = 0;
-        let mut green = 0;
-        let mut blue = 0;
-
-        for subset in game_line.split("; ") {
-            let cubes = subset.split(", ");
-            for cube in cubes {
-                let pick = cube.split(" ").collect::<Vec<&str>>();
-                let n = pick[0].parse::<u32>().unwrap();
-                let colour = pick[1];
-                if colour == "red" {
-                    red = max(red, n);
-                } else if colour == "green" {
-                    green = max(green, n);
-                } else if colour == "blue" {
-                    blue = max(blue, n);
-                } else {
-                    panic!();
+            for subset in game_line.split("; ") {
+                let cubes = subset.split(", ");
+                for cube in cubes {
+                    let pick = cube.split(" ").collect::<Vec<&str>>();
+                    let n = pick[0].parse::<u32>().unwrap();
+                    let colour = pick[1];
+                    if colour == "red" {
+                        red = max(red, n);
+                    } else if colour == "green" {
+                        green = max(green, n);
+                    } else if colour == "blue" {
+                        blue = max(blue, n);
+                    } else {
+                        panic!();
+                    }
                 }
             }
-        }
-        score += eval(red, green, blue, num);
-    }
-
-    Some(score)
+        })
+        .sum()
 }
 
 #[cfg(test)]
