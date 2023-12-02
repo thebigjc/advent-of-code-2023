@@ -56,14 +56,12 @@ fn score_game(input: &str, eval: fn(u32, u32, u32, u32) -> u32) -> Option<u32> {
                     panic!();
                 }
             }
-        
         }
         score += eval(red, green, blue, num);
     }
 
     Some(score)
 }
-
 
 #[cfg(test)]
 mod tests {

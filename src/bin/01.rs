@@ -12,7 +12,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 fn score_line_1(l: &str) -> u32 {
     let mut first = 10;
     let mut last = 10000;
-    
+
     for c in l.chars() {
         if c.is_digit(10) {
             let d = c.to_digit(10).unwrap();
@@ -30,7 +30,7 @@ fn score_line_1(l: &str) -> u32 {
 
 fn score_line_2(l: &str) -> u32 {
     let mut first = 10;
-    let mut last = 0; 
+    let mut last = 0;
 
     for i in 0..l.len() {
         let s = &l[i..];
