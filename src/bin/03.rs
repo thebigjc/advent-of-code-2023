@@ -6,98 +6,71 @@ pub fn part_one(input: &str) -> Option<u32> {
     let line_len = input.lines().next()?.len();
     let input = input.replace('\n', "");
     let chars = input.chars().filter(|c| *c != '\n').collect::<Vec<char>>();
-    let mut i = 0;
-    let mut parts = Vec::new();
-
-    while i < chars.len() {
-        let mut end = chars.len();
-        if chars[i].is_ascii_digit() {
-            for  (j, c) in chars.iter().enumerate().skip(i+1) {
-                end = j;
-
-                if j % line_len == 0 {
-                    break;
-                }
-                if !c.is_ascii_digit() {
-                    break;
-                }
-            }
-            let adjacent = is_adjacent(i, end, line_len, &chars);
-            println!("{}, {}", &input[i..end], adjacent);
-            if adjacent {
-                parts.push(input[i..end].parse::<u32>().unwrap());
-            }
-            i = end-1;
-        }
-        i += 1;
-    }
-    Some(parts.iter().sum())
-}
-
-fn is_adjacent(start: usize, end: usize, line_len: usize, chars: &[char]) -> bool {
     let lines = chars.len() / line_len;
+    let mut parts = HashSet::new();
 
-    // Look left
-    if start % line_len > 0 {
-        let c = chars[start-1];
-        if is_symbol(c) {
-            return true;
-        }
-    }
-
-    // Look Right
-    if end % line_len < line_len - 1 {
-        let c = chars[end];
-        if is_symbol(c) {
-            return true;
-        }
-    }
-
-    // Look Up
-    if look(false, start, line_len, end, lines, chars) {
-        return true;
-    }
-
-    // Look Down
-    if look(true, start, line_len, end, lines, chars) {
-        return true;
-    }
-
-    false
-}
-
-fn look(up: bool, start: usize, line_len: usize, end: usize, lines: usize, chars: &[char]) -> bool {
-    let mut x: i32 = (start % line_len) as i32;
-    let mut y = start / line_len;
-    
-    if up {
-        if y == 0 {
-            return false;
-        }
-        y -= 1;
-    } else {
-        if y == lines - 1 {
-            return false;
-        }
-        y += 1;
-    }
-
-    x -= 1;
-
-    for i in 0..end-start+2 {
-        if (x + (i as i32)) < 0 {
-            continue;
-        }
-
-        let x_i = (x + (i as i32)) as usize;
-        if x_i < line_len {
-            let c = chars[x_i + y * line_len];
-            if is_symbol(c) {
-                return true;
+    for (i, c) in chars.iter().enumerate() {
+        if is_symbol(*c) {
+            let x = i % line_len;
+            let y = i / line_len;
+            let deltas = [
+                (-1, 0),  // Left
+                (-1, -1), // Left, Up
+                (0, -1),  // Up
+                (1, -1),  // Right, Up
+                (1, 0),   // Right
+                (1, 1),   // Right, Down
+                (0, 1),   // Down
+                (-1, 1),  // Down Left
+            ];
+            for (dx, dy) in deltas.iter() {
+                let x_i: i32 = x as i32 + dx;
+                let y_i: i32 = y as i32 + dy;
+                if x_i < 0 || y_i < 0 || x_i >= line_len as i32 || y_i >= lines as i32 {
+                    continue;
+                }
+                let coords = find_number(x_i as usize, y_i as usize, line_len, &chars);
+                parts.insert(coords);
             }
         }
     }
-    false
+
+    let mut sum = 0;
+    for part in parts.iter() {
+        let val = part.map_or(0, |(a, b)| input[a..b].parse::<u32>().unwrap());
+        println!("{}, {:?}", val, part);
+
+        sum += val;
+    }
+
+    Some(sum)
+}
+
+fn find_number(x: usize, y: usize, line_len: usize, chars: &[char]) -> Option<(usize, usize)> {
+    let c = chars[x + y * line_len];
+    if !c.is_ascii_digit() {
+        return None;
+    }
+
+    // Look left until we run out of digits
+    let mut start = x;
+    while start > 0 {
+        if !chars[start - 1 + y * line_len].is_ascii_digit() {
+            break;
+        }
+        start -= 1;
+    }
+
+    // Look left until we run out of digits
+    let mut end = x;
+    while end < line_len - 1 {
+        if !chars[end + 1 + y * line_len].is_ascii_digit() {
+            break;
+        }
+        end += 1;
+    }
+
+    Some((start + y * line_len, end + 1 + y * line_len))
 }
 
 fn is_symbol(c: char) -> bool {
