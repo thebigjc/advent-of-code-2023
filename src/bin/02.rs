@@ -43,7 +43,7 @@ fn score_game(input: &str, eval: fn(u32, u32, u32, u32) -> u32) -> Option<u32> {
             for subset in game_line.split("; ") {
                 let cubes = subset.split(", ");
                 for cube in cubes {
-                    let pick = cube.split(" ").collect::<Vec<&str>>();
+                    let pick = cube.split(' ').collect::<Vec<&str>>();
                     let n = pick[0].parse::<u32>().unwrap();
                     let colour = pick[1];
                     if colour == "red" {
@@ -57,6 +57,7 @@ fn score_game(input: &str, eval: fn(u32, u32, u32, u32) -> u32) -> Option<u32> {
                     }
                 }
             }
+            Some(eval(red, green, blue, num))
         })
         .sum()
 }

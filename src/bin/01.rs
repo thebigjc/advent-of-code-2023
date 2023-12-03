@@ -14,7 +14,7 @@ fn score_line_1(l: &str) -> u32 {
     let mut last = 10000;
 
     for c in l.chars() {
-        if c.is_digit(10) {
+        if c.is_ascii_digit() {
             let d = c.to_digit(10).unwrap();
 
             if first == 10 {
@@ -35,7 +35,7 @@ fn score_line_2(l: &str) -> u32 {
     for i in 0..l.len() {
         let s = &l[i..];
         let c = s.chars().next().unwrap();
-        if c.is_digit(10) {
+        if c.is_ascii_digit() {
             let d = c.to_digit(10).unwrap();
 
             if first == 10 {
