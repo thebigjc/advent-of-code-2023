@@ -57,11 +57,9 @@ pub fn part_two(input: &str) -> Option<u32> {
 
     let mut bonus = Vec::new();
 
-    let mut score = 0;
+    let mut score = cards.len() as u32;
 
     for card in &cards {
-        score += 1;
-
         if card.count == 0 {
             continue;
         }
