@@ -60,10 +60,6 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut score = cards.len() as u32;
 
     for card in &cards {
-        if card.count == 0 {
-            continue;
-        }
-
         for j in 0..card.count {
             bonus.push(card.card + j + 1);
         }
