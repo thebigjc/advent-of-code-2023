@@ -6,8 +6,8 @@ pub fn part_one(input: &str) -> Option<u32> {
     let mut sum = 0;
 
     for l in input.lines() {
-        let (_card, numbers) = split_card(l);
-        let (winning_str, have_str) = numbers.split_once(" | ").unwrap();
+        let (_card, numbers) = split_card(l)?;
+        let (winning_str, have_str) = numbers.split_once(" | ")?;
         let winning = parse_numbers(winning_str);
         let have = parse_numbers(have_str);
         let count = winning.intersection(&have).count();
@@ -22,9 +22,9 @@ pub fn part_one(input: &str) -> Option<u32> {
     Some(sum)
 }
 
-fn split_card(l: &str) -> (usize, &str) {
-    let (card, numbers) = l.split_once(": ").unwrap();
-    (card[5..].trim().parse::<usize>().unwrap(), numbers)
+fn split_card(l: &str) -> Option<(usize, &str)> {
+    let (card, numbers) = l.split_once(": ")?;
+    Some((card[5..].trim().parse::<usize>().unwrap(), numbers))
 }
 
 fn parse_numbers(s: &str) -> HashSet<u32> {
@@ -45,7 +45,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     let mut cards = Vec::new();
 
     for l in input.lines() {
-        let (card, numbers) = split_card(l);
+        let (card, numbers) = split_card(l).unwrap();
         let (winning_str, have_str) = numbers.split_once(" | ").unwrap();
         let winning = parse_numbers(winning_str);
         let have = parse_numbers(have_str);
