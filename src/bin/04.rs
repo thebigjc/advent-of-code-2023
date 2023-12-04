@@ -51,10 +51,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         let have = parse_numbers(have_str);
         let count = winning.intersection(&have).count();
 
-        let card = Card {
-            card,
-            count,
-        };
+        let card = Card { card, count };
         cards.push(card);
     }
 
