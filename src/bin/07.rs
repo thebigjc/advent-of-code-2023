@@ -50,11 +50,7 @@ fn parse_hand_joker(hand_str: &str) -> Hand {
         })
         .collect_vec();
 
-    let mut max_hand = all_hands
-        .iter()
-        .map(build_hand)
-        .max()
-        .unwrap();
+    let mut max_hand = all_hands.iter().map(build_hand).max().unwrap();
 
     max_hand.cards = cards
         .iter()
