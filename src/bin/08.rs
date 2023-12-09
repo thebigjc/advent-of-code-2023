@@ -53,8 +53,8 @@ pub fn gcd(a1: usize, b1: usize) -> usize {
 }
 
 pub fn lcm(a: usize, b: usize) -> usize {
-    (a*b) / gcd(a, b)
-}   
+    (a * b) / gcd(a, b)
+}
 
 pub fn part_two(input: &str) -> Option<usize> {
     let (pattern, map) = parse_input(input);
@@ -82,11 +82,7 @@ pub fn part_two(input: &str) -> Option<usize> {
         all_steps.push(steps);
     }
 
-    let res = all_steps
-        .clone()
-        .into_iter()
-        .reduce(lcm)
-        .unwrap();
+    let res = all_steps.clone().into_iter().reduce(lcm).unwrap();
 
     Some(res)
 }
